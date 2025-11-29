@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="navbar">
+            <label style="color:white;">Category Filter:</label>
+            <select id="categoryFilter" onchange="applyFilters()">
+                <option value="ALL">ALL</option>
+                <option value="Auto">Auto</option>
+                <option value="Car">Car</option>
+                <option value="Truck">Truck</option>
+                <option value="Bus">Bus</option>
+            </select>
+            <label style="color: white;">Availability Filter:</label>
+            <select id="availabilityFilter" onchange="applyFilters()">
+                <option value="ALL">ALL</option>
+                <option value="Available">Available</option>
+                <option value="Unavailable">Unavailable</option>
+            </select>
+            <button onclick="clearFilters()" style="padding:5px 10px; background-color: #7a8186;color: white; border: none; border-radius: 4px;cursor: pointer;">Clear Filter</button>
+        </div>
+        <div class="sidebar">
+            <h3>Add New Vehicle</h3>
+            <form id="fleetForm">
+                <label for="regNo">Reg No of vehicle:</label>
+                <input type="text" id="regNo" required>
+                <label for="category">Category:</label>
+                <select id="category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Auto">Auto</option>
+                    <option value="Car">Car</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Bus">Bus</option>
+                </select>
+                <label for="driverName">Driver name:</label>
+                <input type="text" id="driverName" required>
+                <label for="isAvaiable">Availability Status:</label>
+                <select id="isAvaiable" required>
+                    <option value="Available">Available</option>
+                    <option value="Unavailable">Unavailable</option>
+                </select>
+                <button type="submit" id="addFleetBtn">Add Fleet</button>
+            </form>
+        </div>
+        <div class="main-content" id="mainContentArea">
+            <p id="noVehiclesMessage" style="grid-column: 1 /-1;text-align: center;color: #778089;">No Vehicles added yet.</p>
+        </div>
+    </div>
+    <script>
+        let fleetData =[];
+        const SAMPLE_IMAGE_SRC="https://coding-platform.s3.amazonaws.com/dev/lms/tickets/5e80fcb6-3f8e-480c-945b-30a5359eb40e/JNmYjkVr3WOjsrbu.png";
+        document.addEventListener('DOMContentLoaded', ( )=>{
+            const storedData=localStorage.getItem('fleetData');
+            if(storedData){
+                fleetData=JSON.parse(storedData);
+            }
+            renderFleetCards();
+            document.getElementById('fleetForm').addEventListener('submit',handleAddFleet);
+        });
+        function saveFleetData(){
+            localStorage.setItem('fleetData',JSON.stringify(fleetData));
+        }
+        function handleAddFleet(event){
+            event.preventDefault();
+            const regNo = document.getElementById('regNo').value.trim();
+            const category = document.getElementById('category').value;
+            const driverName = document.getElementById('driverName').value.trim();
+            const isAvailable = document.getElementById('isAvailable').value;
+            if(!regNo || !category || !driverName || !isAvailable){
+                alert("All fields are required.")
+                return;
+            }
+            const newVehicle ={
+                id: Date.now(),
+                regNo:regNo,
+                category:category,
+                driverName :driverName,
+                isAvailable:isAvailable
+            };
+            fleetData.push(newVehicle);
+            saveFleetData();
+            renderFleetCards();
+            document.getElementById('fleetForm').reset();
+        }
+        window.updateDriver=function(vehicleId){
+            const vehicle=fleetData.find(v =>v.id ===vehicleId);
+            if(!vehicle)return;
+            const newDriverName = prompt('Enter new Driver name for reg no :${vehicle.regNo}',vehicle.driverName);
+            if(newDriverName !== null){
+                newDrivername.trim();
+                if(trimmedName === ""){
+                    alert("Driver Name cannot be empty.");
+                    return;
+                }
+                
+            }
+        }
+    </script>
+</body>
+</html>

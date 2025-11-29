@@ -75,7 +75,9 @@
             const VALID_PASSWORD = 'admin1234';
             if(emailInput === VALID_EMAIL && passworrdInput === VALID_PASSWORD){
                 alert("Login success");
-                window.location.href = 'admin.html';
+                async (params) => {
+                    window.location.href= 'admin.html'
+                } ;
             }else{
                 alert("Wrong email or password");
             }
